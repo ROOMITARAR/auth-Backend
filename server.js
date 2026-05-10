@@ -13,11 +13,18 @@ const fundroutes= require('./routes/fundroutes');
 const app = express();
 const port = process.env.PORT || 3001;
 
-const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:4200'];
+const allowedOrigins = [
+  'http://localhost:4200',
+  'https://fyp-frontend-tawny-five.vercel.app'
+];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
   credentials: true,
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
